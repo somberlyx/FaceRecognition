@@ -150,7 +150,15 @@ class App:
 
 
   def try_again_register(self):
-    pass
+    # Clear the current image displayed in the label
+    self.capture_label.configure(image='')
+
+    # Capture a new image from the webcam
+    self.register_capture = self.most_recent_capture_arr.copy()
+
+    # Display the new captured image in the label
+    self.add_img_to_label(self.capture_label)
+
 
   def start(self):
     self.main_window.mainloop()
