@@ -61,6 +61,12 @@ class App:
 
     self.add_img_to_label(self.capture_label)
 
+    self.entry_text_register = util.get_entry_text(self.register_window)
+    self.entry_text_register.place(x=750, y=150)
+
+    self.text_label_register = util.get_text_label(self.register_window, 'Input username:')
+    self.text_label_register.place(x=750, y=140)
+
   def add_img_to_label(self, label):
     imgtk = ImageTk.PhotoImage(image=self.most_recent_capture_pil)
     label.imgtk = imgtk
