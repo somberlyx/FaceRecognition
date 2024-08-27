@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import cv2
 from PIL import Image, ImageTk  
 import os
@@ -70,7 +71,7 @@ class App:
     self.entry_text_register.place(x=750, y=150)
 
     self.text_label_register = util.get_text_label(self.register_window, 'Input username:')
-    self.text_label_register.place(x=750, y=140)
+    self.text_label_register.place(x=750, y=100)
 
   def add_img_to_label(self, label):
     imgtk = ImageTk.PhotoImage(image=self.most_recent_capture_pil)
@@ -80,7 +81,18 @@ class App:
     self.register_capture = self.most_recent_capture_arr.copy()
 
   def accept_register(self):
-    pass
+   name = self.entry_text_register.get(1.0, 'end-1c')
+   if not name.strip():
+    messagebox.showerror("Error", "Username cannot be empty.")
+    return
+   
+   file_path = os.path.join(self.db_dir, f'{name}.jpg')
+   if cv2.imwrite(file_path, self.register_capture):
+    util.msg_box("Success", f"User '{name}' registered successfully!")
+    self.register_window.destroy()
+   else:
+    messagebox.showerror("Error", "Failed to save image.")
+
 
   def try_again_register(self):
     pass
