@@ -3,7 +3,9 @@ from tkinter import messagebox
 import cv2
 from PIL import Image, ImageTk  
 import os
-
+import face_recognition
+import face_recognition_models
+import subprocess
 import util
 
 class App:
@@ -50,7 +52,14 @@ class App:
     self._label.after(20, self.process_webcam)
 
   def login(self):
-    pass
+    unknown_img_path = './.tmp.jpg'
+
+    cv2.imwrite(unknown_img_path, self.most_recent_capture_arr)
+
+    output = subprocess.check_output(['face_recognition', self.db_dir, unknown_img_path])
+    print(output)
+
+    os.remove(unknown_img_path)
 
   def register(self):
     self.register_window = tk.Toplevel(self.main_window)
