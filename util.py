@@ -18,12 +18,12 @@ def get_button(window, text, color, command, fg='white'):
   return button
 
 def get_img_label(window):
-  label = tk.label(window)
+  label = tk.Label(window)
   label.grid(row=0, column=0)
   return label
 
 def get_text_label(window, text):
-  label = tk.label(window, text=text)
+  label = tk.Label(window, text=text)
   label.config(font=('sans-serif', 21), justify="left")
   return label
 
