@@ -1,6 +1,7 @@
 import tkinter as tk
 import cv2
 from PIL import Image, ImageTk  
+import os
 
 import util
 
@@ -19,6 +20,10 @@ class App:
     self.webcam_label.place(x=10, y=0, width=700, height=500)
 
     self.add_webcam(self.webcam_label)
+
+    self.db_dir = './db'
+    if not os.path.exists(self.db_dir):
+      os.mkdir(self.db_dir)
 
   def add_webcam(self, label):
     if 'cap' not in self.__dict__:
