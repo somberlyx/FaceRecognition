@@ -111,17 +111,42 @@ class App:
     self.register_capture = self.most_recent_capture_arr.copy()
 
   def accept_register(self):
-   name = self.entry_text_register.get(1.0, 'end-1c')
-   if not name.strip():
-    messagebox.showerror("Error", "Username cannot be empty.")
-    return
-   
+   name = self.entry_text_register.get(1.0, 'end-1c').strip()
+   if not name:
+      messagebox.showerror("Error", "Username cannot be empty.")
+      return
+
+  # Save the temporary image to check for matches
+   temp_img_path = './.temp_register.jpg'
+   cv2.imwrite(temp_img_path, self.register_capture)
+
+  # Perform face recognition to check for existing users
+   output = subprocess.check_output(['face_recognition', self.db_dir, temp_img_path])
+   output = output.decode('utf-8')
+
+  # Print the output to see its format
+   print("Raw output from face_recognition during registration:", output)
+
+   if output.strip() and ',' in output:
+      existing_name = output.split(',')[1].strip()
+   else:
+      existing_name = 'unknown_person'
+
+  # Check if the face matches an existing user
+   if existing_name != 'unknown_person':
+      util.msg_box('User Already Exists', f'The face you are trying to register matches with "{existing_name}". Please log in instead.')
+      os.remove(temp_img_path)  # Clean up the temporary image
+      return
+
+   # No matching face found, proceed with registration
    file_path = os.path.join(self.db_dir, f'{name}.jpg')
    if cv2.imwrite(file_path, self.register_capture):
-    util.msg_box("Success", f"User '{name}' registered successfully!")
-    self.register_window.destroy()
+      util.msg_box("Success", f"User '{name}' registered successfully!")
+      self.register_window.destroy()
    else:
-    messagebox.showerror("Error", "Failed to save image.")
+      messagebox.showerror("Error", "Failed to save image.")
+
+   os.remove(temp_img_path)  # Clean up the temporary image
 
 
   def try_again_register(self):
