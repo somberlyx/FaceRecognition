@@ -3,8 +3,7 @@ from tkinter import messagebox
 import cv2
 from PIL import Image, ImageTk  
 import os
-import face_recognition
-import face_recognition_models
+import datetime
 import subprocess
 import util
 
@@ -27,6 +26,8 @@ class App:
     self.db_dir = './db'
     if not os.path.exists(self.db_dir):
       os.mkdir(self.db_dir)
+
+    self.log_path = './log.txt'
 
   def add_webcam(self, label):
     if 'cap' not in self.__dict__:
@@ -57,8 +58,28 @@ class App:
     cv2.imwrite(unknown_img_path, self.most_recent_capture_arr)
 
     output = subprocess.check_output(['face_recognition', self.db_dir, unknown_img_path])
-    print(output)
+    
+    output = output.decode('utf-8')
 
+    # Print the output to see its format
+    print("Raw output from face_recognition:", output)
+
+    # Example output: "./db/person1.jpg, person1\n"
+    if output.strip() and ',' in output:
+        name = output.split(',')[1].strip()
+    else:
+        name = 'unknown_person'
+
+    if name in ['unknown_person', 'no_persons_found']:
+        util.msg_box('Unknown user. Please register new user or try again')
+    else:
+        util.msg_box('Welcome back!', f'Welcome, {name}')
+        with open(self.log_path, 'a') as f:
+            f.write('{},{}\n'.format(name, datetime.datetime.now()))
+            f.close()
+    
+    print(output)
+    
     os.remove(unknown_img_path)
 
   def register(self):
