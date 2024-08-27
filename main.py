@@ -47,6 +47,31 @@ class App:
     pass
 
   def register(self):
+    self.register_window = tk.Toplevel(self.main_window)
+    self.register_window.geometry("1200x520+370+120")
+
+    self.accept_button_register_main_window = util.get_button(self.register_window, 'Accept', 'green', self.accept_register,)
+    self.accept_button_register_main_window.place(x=750, y=300)
+
+    self.try_again_button_register_main_window = util.get_button(self.register_window, 'Try Again', 'red', self.try_again_register,)
+    self.try_again_button_register_main_window.place(x=750, y=400)
+
+    self.capture_label = util.get_img_label(self.register_window)
+    self.capture_label.place(x=10, y=0, width=700, height=500)
+
+    self.add_img_to_label(self.capture_label)
+
+  def add_img_to_label(self, label):
+    imgtk = ImageTk.PhotoImage(image=self.most_recent_capture_pil)
+    label.imgtk = imgtk
+    label.configure(image=imgtk)
+
+    self.register_capture = self.most_recent_capture_arr.copy()
+
+  def accept_register(self):
+    pass
+
+  def try_again_register(self):
     pass
 
   def start(self):
